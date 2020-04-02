@@ -1,5 +1,72 @@
 import numpy as np
 
+def decisionTree_modelEvaluationMetrics():
+    # Model Evalutation Metrics -- Testing your models
+
+    # Import statements
+    from sklearn.tree import DecisionTreeClassifier
+    from sklearn.metrics import accuracy_score
+    import pandas as pd
+    import numpy as np
+
+    # Import the train test split
+    # http://scikit-learn.org/0.16/modules/generated/sklearn.cross_validation.train_test_split.html
+    from sklearn.cross_validation import train_test_split
+
+    # Read in the data.
+    data = np.asarray(pd.read_csv('data_decisionTree_modelEvaluationMetrics.csv', header=None))
+    # Assign the features to the variable X, and the labels to the variable y.
+    X = data[:,0:2]
+    y = data[:,2]
+
+    # Use train test split to split your data
+    # Use a test size of 25% and a random state of 42
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+    # Instantiate your decision tree model
+    model = DecisionTreeClassifier()
+
+    # TODO: Fit the model to the training data.
+    model.fit(X_train, y_train)
+
+    # TODO: Make predictions on the test data
+    y_pred = model.predict(X_test)
+
+    # TODO: Calculate the accuracy and assign it to the variable acc on the test data.
+    acc = accuracy_score(y_test, y_pred)
+
+
+def SVMs():
+    # Import statements
+    from sklearn.svm import SVC
+    from sklearn.metrics import accuracy_score
+    import pandas as pd
+    import numpy as np
+
+    # Read the data.
+    data = np.asarray(pd.read_csv('data_SVM.csv', header=None))
+    # Assign the features to the variable X, and the labels to the variable y.
+    X = data[:, 0:2]
+    y = data[:, 2]
+
+    # TODO: Create the model and assign it to the variable model.
+    # Find the right parameters for this model to achieve 100% accuracy on the dataset.
+    model = SVC(gamma=10.0, C=6.0)
+    # model = SVC(gamma=27) works well too
+    # model = SVC(kernel='poly', degree=4, C=0.1) # ==> different variations of poly did not change the accuracy at all
+    # model = SVC(kernel='poly', degree=200, C=200.1)
+
+    # TODO: Fit the model.
+    model.fit(X, y)
+
+    # TODO: Make predictions. Store them in the variable y_pred.
+    y_pred = model.predict(X)
+    # y_pred = model.predict([[0.24539,0.81725]])
+    # print(y_pred)
+
+    # TODO: Calculate the accuracy and assign it to the variable acc.
+    acc = accuracy_score(y, y_pred)
+
 def perceptronStepCourseSolution():
     def stepFunction(t):
         if t >= 0:
