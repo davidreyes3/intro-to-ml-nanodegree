@@ -1,4 +1,15 @@
 import numpy as np
+import math
+
+
+def discrete_vs_continuous_sigmoid_calculation():
+    points = [(1, 1), (2, 4), (5, -5), (-4, 5)]
+
+    for point in points:
+        x = 4 * point[0] + 5 * point[1] - 9
+        eq = 1 / (1 + math.exp(-x))
+        print('point: ({x1}, {x2}) x= {x} | result = {eq}'.format(x1=point[0], x2=point[1], x=x, eq=eq))
+
 
 def decisionTree_modelEvaluationMetrics():
     # Model Evalutation Metrics -- Testing your models
@@ -16,8 +27,8 @@ def decisionTree_modelEvaluationMetrics():
     # Read in the data.
     data = np.asarray(pd.read_csv('data_decisionTree_modelEvaluationMetrics.csv', header=None))
     # Assign the features to the variable X, and the labels to the variable y.
-    X = data[:,0:2]
-    y = data[:,2]
+    X = data[:, 0:2]
+    y = data[:, 2]
 
     # Use train test split to split your data
     # Use a test size of 25% and a random state of 42
@@ -67,6 +78,7 @@ def SVMs():
     # TODO: Calculate the accuracy and assign it to the variable acc.
     acc = accuracy_score(y, y_pred)
 
+
 def perceptronStepCourseSolution():
     def stepFunction(t):
         if t >= 0:
@@ -88,6 +100,7 @@ def perceptronStepCourseSolution():
                 W[1] -= X[i][1] * learn_rate
                 b -= learn_rate
         return W, b
+
 
 # this function wont work like in the course because there is a diagram function that is not shown
 def perceptron_alg():
@@ -175,6 +188,7 @@ def regularization():
     lr_coef = lr.coef_
     print(lr_coef)
 
+
 def poly_regression():
     # TODO: Add import statements
     import pandas as pd
@@ -204,6 +218,7 @@ def poly_regression():
     # predictions against the data, or select Submit Answer to check if the degree
     # of the polynomial features is the same as ours!
 
+
 def multiple_linear_regression_in_sklearn():
     from sklearn.linear_model import LinearRegression
     from sklearn.datasets import load_boston
@@ -216,7 +231,7 @@ def multiple_linear_regression_in_sklearn():
     # Make and fit the linear regression model
     # TODO: Fit the model and assign it to the model variable
     model = LinearRegression()
-    model.fit(x, y) # or y.reshape(-1,1) - docs say array of shape (n_samples,) or (n_samples,n_targets)
+    model.fit(x, y)  # or y.reshape(-1,1) - docs say array of shape (n_samples,) or (n_samples,n_targets)
 
     # Make a prediction using the model
     sample_house = [[2.29690000e-01, 0.00000000e+00, 1.05900000e+01, 0.00000000e+00, 4.89000000e-01,
@@ -225,6 +240,7 @@ def multiple_linear_regression_in_sklearn():
     # TODO: Predict housing price for the sample_house
     prediction = model.predict(sample_house)
     print(prediction)
+
 
 def linear_regression_in_scikit_learn():
     # TODO: Add import statements
@@ -283,4 +299,4 @@ def mini_batch_quiz():
     print(yhat.sum())
 
 
-mini_batch_quiz_1()
+discrete_vs_continuous_sigmoid_calculation()
