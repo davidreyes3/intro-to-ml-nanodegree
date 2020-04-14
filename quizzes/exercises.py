@@ -2,6 +2,43 @@ import numpy as np
 import math
 
 
+
+def cross_entropy_solution():
+    Y = [1, 0, 1, 1]
+    P = [0.4, 0.6, 0.1, 0.5]
+    Y = np.float_(Y)
+    P = np.float_(P)
+    print(-np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P)))
+
+
+def cross_entropy_vectors():
+    Y = [1, 0, 1, 1]
+    P = [0.4, 0.6, 0.1, 0.5]
+    result = sum(Y * np.log(P) + np.subtract(1, Y) * np.log(np.subtract(1, P)))
+    print(result)
+
+
+def cross_entropy_forloop():
+    Y = [1, 0, 1, 1]
+    P = [0.4, 0.6, 0.1, 0.5]
+    count = len(P)
+    result = 0.00
+    for i in range(count):
+        result = result + Y[i]*np.log(P[i]) + (1-Y[i])*np.log(1-P[i])
+    return -result
+
+def softmax():
+    L = [3, 1]
+    # L = [3, 1, 5, 9, -1]
+    result = []
+
+    for i in L:
+        result.append(np.exp(i) / sum(np.exp(L)))
+
+    print(result)
+
+
+
 def discrete_vs_continuous_sigmoid_calculation():
     points = [(1, 1), (2, 4), (5, -5), (-4, 5)]
 
@@ -299,4 +336,4 @@ def mini_batch_quiz():
     print(yhat.sum())
 
 
-discrete_vs_continuous_sigmoid_calculation()
+cross_entropy_solution()
