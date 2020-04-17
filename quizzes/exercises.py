@@ -2,6 +2,27 @@ import numpy as np
 import math
 
 
+def perceptrons():
+    w1 = 2
+    w2 = 6
+    b = -2
+
+    print(w1 * 0.4 + w2 * 0.6 + b)
+    print(1 / (1 + np.exp(-(w1 * 0.4 + w2 * 0.6 + b))))
+
+    w1 = 3
+    w2 = 5
+    b = -2.2
+    print(w1 * 0.4 + w2 * 0.6 + b)
+    print(1 / (1 + np.exp(-(w1 * 0.4 + w2 * 0.6 + b))))
+
+    w1 = 5
+    w2 = 4
+    b = -3
+    print(w1 * 0.4 + w2 * 0.6 + b)
+    print(1 / (1 + np.exp(-(w1 * 0.4 + w2 * 0.6 + b))))
+
+
 def cross_entropy_solution():
     Y = [1, 0, 1, 1]
     P = [0.4, 0.6, 0.1, 0.5]
@@ -335,4 +356,4 @@ def mini_batch_quiz():
     print(yhat.sum())
 
 
-cross_entropy_solution()
+perceptrons()
