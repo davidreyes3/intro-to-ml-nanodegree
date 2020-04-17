@@ -2,7 +2,6 @@ import numpy as np
 import math
 
 
-
 def cross_entropy_solution():
     Y = [1, 0, 1, 1]
     P = [0.4, 0.6, 0.1, 0.5]
@@ -24,8 +23,9 @@ def cross_entropy_forloop():
     count = len(P)
     result = 0.00
     for i in range(count):
-        result = result + Y[i]*np.log(P[i]) + (1-Y[i])*np.log(1-P[i])
+        result = result + Y[i] * np.log(P[i]) + (1 - Y[i]) * np.log(1 - P[i])
     return -result
+
 
 def softmax():
     L = [3, 1]
@@ -36,7 +36,6 @@ def softmax():
         result.append(np.exp(i) / sum(np.exp(L)))
 
     print(result)
-
 
 
 def discrete_vs_continuous_sigmoid_calculation():
