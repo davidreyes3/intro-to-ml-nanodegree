@@ -1,5 +1,193 @@
 import numpy as np
 import math
+import matplotlib as plt
+
+from sklearn.model_selection import learning_curve
+
+"""
+    These functions belong to the same quiz: Detecting overfitting and underfitting
+    START --------------------------------------------------------------------------------------------------------
+"""
+
+
+def detecting_over_and_underfitting():
+    # Import, read, and split data
+    import pandas as pd
+    data = pd.read_csv('data_detecting_over_and_underfitting.csv')
+    import numpy as np
+    X = np.array(data[['x1', 'x2']])
+    y = np.array(data['y'])
+
+    # Fix random seed
+    np.random.seed(55)
+
+    ### Imports
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.ensemble import GradientBoostingClassifier
+    from sklearn.svm import SVC
+
+    # TODO: Uncomment one of the three classifiers, and hit "Test Run"
+    # to see the learning curve. Use these to answer the quiz below.
+
+    ### Logistic Regression
+    # estimator = LogisticRegression()
+
+    ### Decision Tree
+    # estimator = GradientBoostingClassifier()
+
+    ### Support Vector Machine
+    estimator = SVC(kernel='rbf', gamma=20)
+
+
+# It is good to randomize the data before drawing Learning Curves
+def randomize(X, Y):
+    permutation = np.random.permutation(Y.shape[0])
+    X2 = X[permutation, :]
+    Y2 = Y[permutation]
+    return X2, Y2
+
+
+X2, y2 = randomize(X, y)
+
+
+def draw_learning_curves(X, y, estimator, num_trainings):
+    train_sizes, train_scores, test_scores = learning_curve(
+        estimator, X2, y2, cv=None, n_jobs=1, train_sizes=np.linspace(.1, 1.0, num_trainings))
+
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+
+    plt.grid()
+
+    plt.title("Learning Curves")
+    plt.xlabel("Training examples")
+    plt.ylabel("Score")
+
+    plt.plot(train_scores_mean, 'o-', color="g",
+             label="Training score")
+    plt.plot(test_scores_mean, 'o-', color="y",
+             label="Cross-validation score")
+
+    plt.legend(loc="best")
+
+    plt.show()
+
+
+"""
+    These functions belong to the same quiz: Detecting overfitting and underfitting
+    END --------------------------------------------------------------------------------------------------------
+"""
+
+
+def backprop():
+    import numpy as np
+
+    def sigmoid(x):
+        """
+        Calculate sigmoid
+        """
+        return 1 / (1 + np.exp(-x))
+
+    x = np.array([0.5, 0.1, -0.2])
+    target = 0.6
+    learnrate = 0.5
+
+    weights_input_hidden = np.array([[0.5, -0.6],
+                                     [0.1, -0.2],
+                                     [0.1, 0.7]])
+
+    weights_hidden_output = np.array([0.1, -0.3])
+
+    ## Forward pass
+    hidden_layer_input = np.dot(x, weights_input_hidden)
+    print("hidden_layer_input:")
+    print(hidden_layer_input)
+    print(hidden_layer_input.shape)
+    print()
+    hidden_layer_output = sigmoid(hidden_layer_input)
+    print("hidden_layer_output:")
+    print(hidden_layer_output)
+    print(hidden_layer_output.shape)
+    print()
+
+    output_layer_in = np.dot(hidden_layer_output, weights_hidden_output)
+    print("output_layer_in:")
+    print(output_layer_in)
+    print(output_layer_in.shape)
+    print()
+    output = sigmoid(output_layer_in)
+
+    ## Backwards pass
+    ## TODO: Calculate output error
+    error = (target - output)
+
+    # TODO: Calculate error term for output layer -> delta_o
+    output_error_term = error * output * (1 - output)
+
+    # TODO: Calculate error term for hidden layer -> delta_h
+    # h_weights * error * hidden_layer_input
+    # (2) * scalar * (2)
+    hidden_error_term = weights_hidden_output * output_error_term * hidden_layer_output * (1 - hidden_layer_output)
+    # hidden_error_term = np.dot(output_error_term, weights_hidden_output) * hidden_layer_output * \
+    # (1 - hidden_layer_output)
+
+    # TODO: Calculate change in weights for hidden layer to output layer
+    delta_w_h_o = learnrate * output_error_term * hidden_layer_output
+
+    # TODO: Calculate change in weights for input layer to hidden layer
+    delta_w_i_h = learnrate * hidden_error_term * x[:, None]
+
+    print('Change in weights for hidden layer to output layer:')
+    print(delta_w_h_o)
+    print('Change in weights for input layer to hidden layer:')
+    print(delta_w_i_h)
+
+
+def feedforward():
+    import numpy as np
+
+    def sigmoid(x):
+        """
+        Calculate sigmoid
+        """
+        return 1 / (1 + np.exp(-x))
+
+    # Network size
+    N_input = 4
+    N_hidden = 3
+    N_output = 2
+
+    np.random.seed(42)
+    # Make some fake data
+    X = np.random.randn(4)
+
+    weights_input_to_hidden = np.random.normal(0, scale=0.1, size=(N_input, N_hidden))
+    weights_hidden_to_output = np.random.normal(0, scale=0.1, size=(N_hidden, N_output))
+
+    # TODO: Make a forward pass through the network
+
+    # X[:, None] transposes to a row vector
+    print(X)
+    print(X.shape)
+    print(weights_input_to_hidden)
+    print(weights_input_to_hidden.shape)
+    hidden_layer_in = np.dot(X, weights_input_to_hidden)
+    print(hidden_layer_in.shape)
+    hidden_layer_out = sigmoid(hidden_layer_in)
+    print(hidden_layer_out.shape)
+    # np.dot(hidden_layer_in, weights_hidden_to_output)
+
+    print('Hidden-layer Output:')
+    print(hidden_layer_out)
+
+    output_layer_in = np.dot(hidden_layer_out, weights_hidden_to_output)
+    output_layer_out = sigmoid(output_layer_in)
+
+    print('Output-layer Output:')
+    print(output_layer_out)
+
 
 def gradient_descent():
     def sigmoid(x):
@@ -100,6 +288,31 @@ def cross_entropy_forloop():
     for i in range(count):
         result = result + Y[i] * np.log(P[i]) + (1 - Y[i]) * np.log(1 - P[i])
     return -result
+
+
+def exponential():
+    a = [[1, 2, 3], [3, 4, 5]]
+    aexp = np.exp(a)
+    print(aexp)
+    print()
+    s = np.sum(aexp, axis=1, keepdims=True)
+    print(s)
+    # print(aexp[0,0] + aexp[0,1] + aexp[0,2])
+
+    result = aexp / s
+    print()
+    print(result)
+
+
+def softmax_2d():
+    L = np.random.normal(size=(4, 5))
+
+    result = []
+
+    for i in L:
+        result.append(np.exp(i) / sum(np.exp(L[i])))
+
+    print(result)
 
 
 def softmax():
@@ -275,6 +488,64 @@ def perceptron_alg():
         return boundary_lines
 
 
+def feature_scaling_solution():
+    # TODO: Add import statements
+    import numpy as np
+    import pandas as pd
+    from sklearn.linear_model import Lasso
+    from sklearn.preprocessing import StandardScaler
+
+    # Assign the data to predictor and outcome variables
+    # TODO: Load the data
+    train_data = pd.read_csv('data_feature_scaling.csv', header=None)
+    X = train_data.iloc[:, :-1]
+    y = train_data.iloc[:, -1]
+
+    # TODO: Create the standardization scaling object.
+    scaler = StandardScaler()
+
+    # TODO: Fit the standardization parameters and scale the data.
+    X_scaled = scaler.fit_transform(X)
+
+    # TODO: Create the linear regression model with lasso regularization.
+    lasso_reg = Lasso()
+
+    # TODO: Fit the model.
+    lasso_reg.fit(X_scaled, y)
+
+    # TODO: Retrieve and print out the coefficients from the regression model.
+    reg_coef = lasso_reg.coef_
+    print(reg_coef)
+
+
+def feature_scaling():
+    # TODO: Add import statements
+    import pandas as pd
+    from sklearn.linear_model import Lasso, LinearRegression
+    from sklearn.preprocessing import StandardScaler
+
+    # Assign the data to predictor and outcome variables
+    # TODO: Load the data
+    train_data = pd.read_csv("data_feature_scaling.csv", header=None)
+    X = train_data.iloc[:, 0:len(train_data.columns) - 1].values
+    y = train_data.iloc[:, 6:7].values
+
+    # TODO: Create the standardization scaling object.
+    scaler = StandardScaler()
+
+    # TODO: Fit the standardization parameters and scale the data.
+    X_scaled = scaler.fit_transform(X)
+
+    # TODO: Create the linear regression model with lasso regularization.
+    lasso_reg = Lasso().fit(X_scaled, y)
+
+    # TODO: Fit the model.
+
+    # TODO: Retrieve and print out the coefficients from the regression model.
+    reg_coef = lasso_reg.coef_
+    print(reg_coef)
+
+
 def regularization():
     # TODO: Add import statements
     import pandas as pd
@@ -353,6 +624,25 @@ def multiple_linear_regression_in_sklearn():
     print(prediction)
 
 
+def linear_regression_in_scikit_learn_solution():
+    # TODO: Add import statements
+    import pandas as pd
+    from sklearn.linear_model import LinearRegression
+
+    # Assign the dataframe to this variable.
+    # TODO: Load the data
+    bmi_life_data = pd.read_csv("bmi_and_life_expectancy.csv")
+
+    # Make and fit the linear regression model
+    # TODO: Fit the model and Assign it to bmi_life_model
+    bmi_life_model = LinearRegression()
+    bmi_life_model.fit(bmi_life_data[['BMI']], bmi_life_data[['Life expectancy']])
+
+    # Mak a prediction using the model
+    # TODO: Predict life expectancy for a BMI value of 21.07931
+    laos_life_exp = bmi_life_model.predict(21.07931)
+
+
 def linear_regression_in_scikit_learn():
     # TODO: Add import statements
     import pandas as pd
@@ -410,4 +700,121 @@ def mini_batch_quiz():
     print(yhat.sum())
 
 
-gradient_descent()
+def mini_batch_graddesc():
+    import numpy as np
+    # Setting a random seed, feel free to change it and see different solutions.
+    np.random.seed(42)
+
+    # TODO: Fill in code in the function below to implement a gradient descent
+    # step for linear regression, following a squared error rule. See the docstring
+    # for parameters and returned variables.
+    def MSEStep(X, y, W, b, learn_rate=0.005):
+        """
+        This function implements the gradient descent step for squared error as a
+        performance metric.
+
+        Parameters
+        X : array of predictor features
+        y : array of outcome values
+        W : predictor feature coefficients
+        b : regression function intercept
+        learn_rate : learning rate
+
+        Returns
+        W_new : predictor feature coefficients following gradient descent step
+        b_new : intercept following gradient descent step
+        """
+
+        # Fill in code
+
+        # Square trick calculation
+        # print(W)
+        # print(b)
+        # print("X:")
+        # print(X)
+        # print("y -> " + str(np.shape(y)))
+        # print(y)
+        # print("-----------------------------------------------")
+        # yhat = (W*X.T)+b
+        # W = W + (X.T*learn_rate * (y-yhat))
+        # b = b + (learn_rate * (y-yhat))
+        yhat = np.matmul(X, W) + b
+        print("yhat")
+        print(yhat)
+        error = y - yhat
+        W_new = W + np.matmul(error, X) * learn_rate
+        b_new = b + learn_rate * error.sum()
+
+        # print(W)
+
+        # Add to new W and b
+        # W_new = W.sum()
+        # b_new = b.sum()
+
+        print("W_new")
+        print(W_new)
+        print("b_new")
+        print(b_new)
+
+        return W_new, b_new
+
+    # The parts of the script below will be run when you press the "Test Run"
+    # button. The gradient descent step will be performed multiple times on
+    # the provided dataset, and the returned list of regression coefficients
+    # will be plotted.
+    def miniBatchGD(X, y, batch_size=20, learn_rate=0.005, num_iter=25):
+        """
+        This function performs mini-batch gradient descent on a given dataset.
+
+        Parameters
+        X : array of predictor features
+        y : array of outcome values
+        batch_size : how many data points will be sampled for each iteration
+        learn_rate : learning rate
+        num_iter : number of batches used
+
+        Returns
+        regression_coef : array of slopes and intercepts generated by gradient
+          descent procedure
+        """
+        n_points = X.shape[0]
+        W = np.zeros(X.shape[1])  # coefficients
+        b = 0  # intercept
+
+        # run iterations
+        regression_coef = [np.hstack((W, b))]
+        for _ in range(num_iter):
+            batch = np.random.choice(range(n_points), batch_size)
+            X_batch = X[batch, :]
+            y_batch = y[batch]
+            W, b = MSEStep(X_batch, y_batch, W, b, learn_rate)
+            regression_coef.append(np.hstack((W, b)))
+
+        return regression_coef
+
+    def mini_batch_main():
+        # perform gradient descent
+        data = np.loadtxt('data_minibatch_graddesc.csv', delimiter=',')
+        X = data[:, :-1]  # column array, X[1,0] works
+        # print(X)
+        y = data[:, -1]  # row array, y[0,0] does not work
+        regression_coef = miniBatchGD(X, y)
+
+        # plot the results
+        import matplotlib.pyplot as plt
+
+        plt.figure()
+        X_min = X.min()
+        X_max = X.max()
+        counter = len(regression_coef)
+        for W, b in regression_coef:
+            counter -= 1
+            color = [1 - 0.92 ** counter for _ in range(3)]
+            plt.plot([X_min, X_max], [X_min * W + b, X_max * W + b], color=color)
+        plt.scatter(X, y, zorder=3)
+        plt.show()
+
+    mini_batch_main()
+
+
+exponential()
